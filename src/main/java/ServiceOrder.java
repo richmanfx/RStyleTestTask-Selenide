@@ -4,15 +4,15 @@
  */
 
 import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
-import org.openqa.selenium.ElementNotVisibleException;
 
 import java.io.File;
 
 import static com.codeborne.selenide.Selenide.*;
 
-
+/**
+ * Главный класс
+ */
 public class ServiceOrder {
     public static void main(String[] args) {
 
@@ -51,21 +51,14 @@ public class ServiceOrder {
 //        $(By.name("q")).setValue(searchPhrase1).pressEnter();       // Находим "performance lab"
 //        $(By.xpath("//a[@href = '" + searchSite + "']")).click();   // Переходим на www.performance-lab.ru
 
-        // Часто не разворачивает и сразу сворачивает меню
-        SelenideElement element;
+        // Часто не разворачивает и сразу сворачивает меню - мышку убрать за браузур, на тулбар  :-)
          do {
-            element = $(By.xpath("//li[@id='menu-item-317']/a[@href='#' and contains(text(),'" + searchPhrase2 + "')]")).hover();
+             $(By.xpath("//li[@id='menu-item-317']/a[@href='#' and contains(text(),'" + searchPhrase2 + "')]")).hover();
 
-        // Ссылка видна, она единственная, но при клике становится невидна - печаль, не победил пока, сделал обход
-//        $(By.xpath("//li[@id='menu-item-957']//a[contains(text(),'Автоматизация тестирования')]")).isDisplayed();
-//        $(By.xpath("//li[contains(@id, 'menu-item-957')]//a[contains(text(),'Автоматизация тестирования')]")).click();
-//        $$(By.xpath("//li[@id='menu-item-957']//a[contains(text(),'Автоматизация тестирования')]")).shouldHave(size(1));
+         } while (!$(By.xpath(".//p/a[contains(text(), 'Посмотреть все услуги')]")).isDisplayed());
 
-
-         } while (!$(By.xpath(".//p/a[contains(text(), 'Посмотреть все услуги')]")).isDisplayed()); // В обход
-
-        $(By.xpath(".//p/a[contains(text(), 'Посмотреть все услуги')]")).click();
-        $(By.xpath("//article[@id='post-929']//a[text()='" + searchPhrase3 + "']")).click();
+        $(By.xpath(".//div[@id='nav_top']//li[contains(@class, 'menu-item-141')]/a[contains(text(), '" +
+                    searchPhrase3 + "')]")).click();
 
         // Кнопка "Заказать услугу"
         $(By.xpath("//div[contains(text(),'" + buttonLabel.split(" ")[0] + "') and " +
@@ -89,7 +82,7 @@ public class ServiceOrder {
 
 
 
-        int sleepTime = 10; System.out.println("Слипуем " + sleepTime + " секунд.");    sleep(sleepTime * 1000);
+        int sleepTime = 5; System.out.println("Слипуем " + sleepTime + " секунд.");    sleep(sleepTime * 1000);
         close();
     }
 }
