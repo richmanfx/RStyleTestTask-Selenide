@@ -37,12 +37,12 @@ public class ServiceOrder {
         Configuration.timeout = 2000;
 
         // Использовать Chrome.
-        final String PATH_TO_CHROMEDRIVER_EXE = "src" + File.separator +
+        final String pathToChromedriverExe = "src" + File.separator +
                                                 "main" + File.separator +
                                                 "resources" + File.separator +
                                                 "web_drivers" + File.separator +
                                                 "chromedriver.exe";
-        System.setProperty("webdriver.chrome.driver", PATH_TO_CHROMEDRIVER_EXE);
+        System.setProperty("webdriver.chrome.driver", pathToChromedriverExe);
         Configuration.browser = "chrome";
 
         // Временно без Гугля, для скорости
