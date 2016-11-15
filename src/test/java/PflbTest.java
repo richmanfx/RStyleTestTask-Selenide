@@ -1,6 +1,9 @@
+import com.codeborne.selenide.Configuration;
 import org.openqa.selenium.By;
 import org.testng.annotations.Test;
 import com.codeborne.selenide.testng.BrowserPerTest;
+
+import java.io.File;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
@@ -16,6 +19,15 @@ public class PflbTest {
         final String searchSite = "http://www.performance-lab.ru/";
         final String searchPhrase2 = "Услуги и продукты";
         final String searchPhrase3 = "Автоматизация тестирования";
+
+        // Использовать Chrome.
+        final String pathToChromedriverExe = "src" + File.separator +
+                "main" + File.separator +
+                "resources" + File.separator +
+                "web_drivers" + File.separator +
+                "chromedriver.exe";
+        System.setProperty("webdriver.chrome.driver", pathToChromedriverExe);
+        Configuration.browser = "chrome";
 
         open(searchSite);
 

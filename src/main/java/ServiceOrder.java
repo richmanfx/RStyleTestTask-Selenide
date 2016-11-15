@@ -13,7 +13,7 @@ import static com.codeborne.selenide.Selenide.*;
 /**
  * Главный класс
  */
-public class ServiceOrder {
+public class ServiceOrder {   /*
     public static void main(String[] args) {
 
         final String searchServer = "google.com";
@@ -84,5 +84,5 @@ public class ServiceOrder {
 
         int sleepTime = 5; System.out.println("Слипуем " + sleepTime + " секунд.");    sleep(sleepTime * 1000);
         close();
-    }
+    } */
 }
