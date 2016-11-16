@@ -1,4 +1,7 @@
 import java.io.File;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -13,6 +16,8 @@ import static com.codeborne.selenide.Selenide.*;
  */
 
 public class PerformanceLabTest {
+
+    @Title("First cool check")
     @Test
     public void clientOrderPFLB() {
 
@@ -70,11 +75,21 @@ public class PerformanceLabTest {
         // Кнопка отправки заявки
         $(By.xpath(".//input[@type='submit']")).click();
 
+        // Проверка того, что заявка не отправилась
+        $(By.xpath(".//div[contains(@class, 'validation-errors') and " +
+                   "contains(text(), 'Проверьте правильность введенных данных.')] ")).isDisplayed();
 
+        // Есть ли сообщение про Е-мейл
+        $(By.xpath(".//div[contains(@class, 'not-valid-tip') and " +
+                   "contains(text(), 'Адрес e-mail')] ")).isDisplayed();
+//        <span role="alert" class="wpcf7-not-valid-tip">Адрес e-mail, введенный отправителем, неверен.</span>
     }
 
     @BeforeMethod
-    public void beforeMethod() {
+    public void beforeMethod() throws UnsupportedEncodingException {
+
+        // Для вывода русских сообщений в консоль Windows
+//        PrintStream ps = new PrintStream(System.out, true, "CP866");
 
         // Использовать Chrome.
         final String pathToChromedriverExe = "src" + File.separator +
@@ -92,7 +107,7 @@ public class PerformanceLabTest {
     public void afterMethod() {
 
         // Смотрим на результат глазами :-(
-        int sleepTime = 5;
+        int sleepTime = 10; // секунды
         System.out.println("Слипуем " + sleepTime + " секунд.");
         sleep(sleepTime * 1000);
 
