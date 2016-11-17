@@ -1,6 +1,6 @@
-﻿.gradle/
-.idea/
+﻿.gradle
+.idea
 *.iml
 TODO.txt
-build/
-out/
+build
+out
