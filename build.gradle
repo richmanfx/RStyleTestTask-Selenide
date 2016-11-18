@@ -45,7 +45,7 @@ test.doFirst {
 
 test {
     useTestNG() {
-
+        suites "src/test/resources/testng.xml"
     }
 
 //    systemProperties['browser'] = 'chrome'
