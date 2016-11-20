@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name=" рута€ проба имени —юиты.">
-<test verbose="1" name="Tests name">
-<classes>
-<class name="com.domain.path.to.classWithTest"/>
-</classes>
-</test>
+<suite name="»мени —юиты из testng.xml .">
+    <test verbose="1" name="searchServerOpen">
+        <classes>
+            <class name="ru.r5am.PerformanceLabTest"/>
+        </classes>
+    </test>
+    <test verbose="5" name="ќткрытие поискового сервера, поиск по фразе.">
+        <classes>
+            <class name="ru.r5am.PerformanceLabTest"/>
+        </classes>
+    </test>
+
+
 </suite>

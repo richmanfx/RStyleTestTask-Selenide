@@ -9,6 +9,7 @@ import ru.yandex.qatools.allure.annotations.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -24,7 +25,6 @@ import static com.codeborne.selenide.Selenide.*;
 
 @Title("Тестирование сайта 'www.performance-lab.ru'.")
 @Description("Тестирование сайта 'www.performance-lab.ru'.")
-@Features("Тестирование сайта 'www.performance-lab.ru'.")
 public class PerformanceLabTest {
 
     /**
@@ -33,10 +33,10 @@ public class PerformanceLabTest {
     @BeforeClass
     public void  browserInitialize() {
         final String pathToChromedriverExe = "src" + File.separator +
-                "test" + File.separator +
-                "resources" + File.separator +
-                "web_drivers" + File.separator +
-                "chromedriver.exe";
+                                             "test" + File.separator +
+                                             "resources" + File.separator +
+                                             "web_drivers" + File.separator +
+                                             "chromedriver.exe";
         System.setProperty("webdriver.chrome.driver", pathToChromedriverExe);
         Configuration.browserSize = "1880x800";
         Configuration.browser = "chrome";
@@ -97,9 +97,9 @@ public class PerformanceLabTest {
     }
 
     @Title("Заполнение формы, прикладывание файла документации.")
-    @Step
+    @Step("Step: Заполнение формы, прикладывание файла документации.")
     @Test(priority = 5)
-    public void formFilling() {
+    public void formFilling() throws URISyntaxException {
         String checkBoxName = "Автоматизация тестирования";
         String clientName = "Спиридон";
         String clientEmail = "invalid#email.trash";
@@ -108,12 +108,15 @@ public class PerformanceLabTest {
 
         // Файл документации
         String documentFileName = "documentation.pdf";
-        String documentFilePath = "src" + File.separator + "test" + File.separator +
-                                  "resources" + File.separator + "documents";
-        File uploadedFile = new File(documentFilePath + File.separator + documentFileName);
+        String documentPath = "documents";
+        URL uploadedDocument = PerformanceLabTest.class.getResource(
+            "/" + documentPath + File.separator + documentFileName
+        );
+        File uploadedFile = new File(uploadedDocument.toURI());
 
         // Прикрепить документ к Allure-отчёту
         saveDocumentAttach(uploadedFile);
+
 
         // Заполнение полей
         $(By.name("your-name")).setValue(clientName);
@@ -130,14 +133,11 @@ public class PerformanceLabTest {
 
     /**
      * Прикрепление файла к Allure-отчёту
-     * @param attachName - имя прикрепляемого файла     // TODO:
+     * @param attachFile - прикрепляемый к отчёту файл
      */
     @Attachment(value = "Загружаемый файл документации", type = "application/pdf")
     private static byte[] saveDocumentAttach(File attachFile) {
-//        String name = File.separator + "test" + File.separator + "documents" + File.separator + attachName;
         try {
-//            URL uploadedDocument = PerformanceLabTest.class.getResource(name);
-//            File documentFile = new File(uploadedDocument.toURI());
             return toByteArray(attachFile);
         } catch (Exception e) {
             e.printStackTrace();
@@ -174,7 +174,7 @@ public class PerformanceLabTest {
     public void browserClose() {
 
     // Смотрим на результат глазами :-(
-        int sleepTime = 15; // секунды
+        int sleepTime = 5; // секунды
         System.out.println("Слипуем " + sleepTime + " секунд.");
         sleep(sleepTime * 1000);
 

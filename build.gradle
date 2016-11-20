@@ -1,11 +1,28 @@
 group 'ru.r5am'
-version '1.0.1'
+version '1.0.2'
 apply plugin: 'java'
+apply plugin: 'ru.d10xa.allure'
 defaultTasks 'clean', 'test'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+compileJava.options.encoding = 'UTF-8'
 
 repositories {
     mavenCentral()
     jcenter()
+}
+
+configurations {
+    agent
+}
+
+dependencies {
+    compile "com.codeborne:selenide:${selenideVersion}"
+    testCompile "org.testng:testng:${testNgVersion}"
+    testCompile "ru.yandex.qatools.allure:allure-testng-adaptor:${allureVersion}"
+    agent "org.aspectj:aspectjweaver:${aspectjVersion}"
 }
 
 buildscript {
@@ -17,40 +34,19 @@ buildscript {
     }
 }
 
-apply plugin: 'ru.d10xa.allure'
-
-// For Allure
-configurations {
-    agent
-}
-
-allure {
-    aspectjweaver = true
-    testNG = false
-//    clean = true
-}
-
-dependencies {
-    compile "com.codeborne:selenide:${selenideVersion}"
-    testCompile "org.testng:testng:${testNgVersion}"
-    agent "org.aspectj:aspectjweaver:${aspectjVersion}"
-    testCompile "ru.yandex.qatools.allure:allure-testng-adaptor:${allureVersion}"
-//    classpath "ru.d10xa:gradle-allure-plugin:${gradleAllurePluginVersion}"
-}
-
-// For Allure
 test.doFirst {
     jvmArgs "-javaagent:${configurations.agent.singleFile}"
 }
 
+allure {
+    aspectjweaver = true
+    testNG = true
+}
+
 test {
+    systemProperty "file.encoding", "utf-8"
     useTestNG() {
-        suites "src/test/resources/testng.xml"
+        //        suites "src/test/resources/testng.xml"
+        suiteXmlFiles << new File(rootDir, "testng.xml") //This is how to add custom testng.xml
     }
-
-//    systemProperties['browser'] = 'chrome'
-//    systemProperties['webdriver.chrome.driver'] = 'src/main/resources/web_drivers/chromedriver.exe'
-//    maxParallelForks = 3
-
-//    compileOptions.encoding = 'windows-1251'
 }
