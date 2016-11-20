@@ -24,7 +24,6 @@ import static com.codeborne.selenide.Selenide.*;
  */
 
 @Title("Тестирование сайта 'www.performance-lab.ru'.")
-@Description("Тестирование сайта 'www.performance-lab.ru'.")
 public class PerformanceLabTest {
 
     /**
@@ -44,6 +43,8 @@ public class PerformanceLabTest {
 
     @Title("Открытие поискового сервера, поиск по фразе.")
     @Step
+    @Description("Открывается поисковый сайт 'google.com'. В поле поиска, имеющее name='q', " +
+                 "вводится фраза 'performance lab' и нажимается 'Enter'.")
     @Test(priority=1)
     public void searchServerOpen() {
         String searchServer = "google.com";
@@ -54,9 +55,13 @@ public class PerformanceLabTest {
 
     @Title("Поиск и открытие сайта 'www.performance-lab.ru'.")
     @Step
+    @Description("В открывщемся списке находится результат поиска со сcылкой 'http://www.performance-lab.ru/' и " +
+                 "производится клик по этой ссылке. При переходе по ссылке открывается новая вкладка браузера " +
+                 "(target=\"_blank\") - производится переключение на вторую новую вкладку браузера. По заголовку " +
+                 "страницы первого уровня (h1) 'Выберите продукт, чтобы начать тестирование' производится " +
+                 "идентификация требуемого сайта.")
     @Test(priority=2)
     public void searchAndJumpToWebsite(){
-        System.out.println("");
         String searchSite = "http://www.performance-lab.ru/";
         $(By.xpath("//a[@href = '" + searchSite + "']")).click();
         switchTo().window(1);   // Переключиться на новую вкладку
@@ -65,6 +70,11 @@ public class PerformanceLabTest {
 
     @Title("Переход в меню 'Услуги и продукт -> Автоматизация тестирования'.")
     @Step
+    @Description("В меню определяется пункт 'Услуги и продукты', наводится на него курсор мыши без клика - " +
+            "выпадает меню. Факт выпадения меню определяется по наличию ссылки 'Посмотреть все услуги'. " +
+            "В выпавшем меню производится клик по ссылке субменю 'Автоматизация тестирования'. " +
+            "По заголовку страницы первого уровня (h1) 'Автоматизация тестирования' производится идентификация " +
+            "требуемой страницы.")
     @Test(priority = 3)
     public void menuJump() {
         String menuItem = "Услуги и продукты";
@@ -85,19 +95,30 @@ public class PerformanceLabTest {
         String subMenuItem = "Автоматизация тестирования";
         $(By.xpath(".//div[@id='nav_top']//li[contains(@class, 'menu-item-141')]/a[contains(text(), '" +
                    subMenuItem + "')]")).click();
+
+        $("h1").shouldHave(text("Автоматизация тестирования"));
     }
 
     @Title("Нажатие кнопки 'Заказать услугу'.")
     @Step
+    @Description("Определяется кнопка с текстом, содержащим слова 'Заказать' и 'услугу' и ведущую на страницу" +
+                 "запроса коммерческого предложения. По найденной кнопке производится клик.")
     @Test(priority = 4)
     public void orderButtonClick(){
         String orderButton = "Заказать услугу";
-        $(By.xpath("//div[contains(text(),'" + orderButton.split(" ")[0] + "') and " +
+        $(By.xpath("//a[@href='/commercial-offer']" +
+                   "/div[contains(text(),'" + orderButton.split(" ")[0] + "') and " +
                    "contains(text(),'" + orderButton.split(" ")[1] + "')]")).click();
     }
 
     @Title("Заполнение формы, прикладывание файла документации.")
-    @Step("Step: Заполнение формы, прикладывание файла документации.")
+    @Step
+    @Description("Заполняется форма на получение коммерческого предложения - определяются поля имени, адреса" +
+                 "электронной почты , номера телефона, названия компании и в них вводятся данные: в поле 'Имя' вводится" +
+                 "'Спиридон', в поле 'E-mail' водится заведомо невалидный адрес 'invalid#email.trash', " +
+                 "в поле 'Номер телефона' вводится телефон '8-111-222-33-44', в поле 'Название компании' вводится" +
+                 "'HyperSoft AG', устанавливается чекбокс услуги 'Автоматизация тестирования', выбирается " +
+                 "загружаемый файл 'documentation.pdf' технической документации.")
     @Test(priority = 5)
     public void formFilling() throws URISyntaxException {
         String checkBoxName = "Автоматизация тестирования";
@@ -116,7 +137,6 @@ public class PerformanceLabTest {
 
         // Прикрепить документ к Allure-отчёту
         saveDocumentAttach(uploadedFile);
-
 
         // Заполнение полей
         $(By.name("your-name")).setValue(clientName);
@@ -151,6 +171,10 @@ public class PerformanceLabTest {
 
     @Title("Отправка заявки, проверка неотправлености заявки.")
     @Step
+    @Description("Определяется кнопка подачи заявки и по ней производится клик. Производится проверка того," +
+                 "что заявка не отправилась и появилось сообщение об ошибке с просьбой 'Проверьте правильность " +
+                 "введенных данных.'. Проверяется, что сообщение о невалидности введённых данных (имя класс содержит" +
+                 "'not-valid-tip' имеет в себе словосочетание 'Адрес e-mail'.")
     @Test(priority = 6)
     public void orderSending() {
         // Кнопка отправки заявки
@@ -165,18 +189,12 @@ public class PerformanceLabTest {
                 "contains(text(), 'Адрес e-mail')] ")).isDisplayed();
     }
 
-//    @Attachment(value = "Page screenshot", type = "image/png")
-//    public byte[] saveScreenshot(byte[] screenShot) {
-//        return screenShot;
-//    }
-
     @AfterClass
     public void browserClose() {
 
-    // Смотрим на результат глазами :-(
-        int sleepTime = 5; // секунды
-        System.out.println("Слипуем " + sleepTime + " секунд.");
-        sleep(sleepTime * 1000);
+        // Смотрим на результат глазами :-(
+        int sleepTime = 5;     // секунды
+        sleep(sleepTime * 1000);    // миллисекунды
 
         close();
 

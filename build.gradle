@@ -2,7 +2,7 @@ group 'ru.r5am'
 version '1.0.2'
 apply plugin: 'java'
 apply plugin: 'ru.d10xa.allure'
-defaultTasks 'clean', 'test'
+defaultTasks 'allureReport'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -22,6 +22,7 @@ dependencies {
     compile "com.codeborne:selenide:${selenideVersion}"
     testCompile "org.testng:testng:${testNgVersion}"
     testCompile "ru.yandex.qatools.allure:allure-testng-adaptor:${allureVersion}"
+//    agent group: 'org.aspectj', name: 'aspectjweaver', version: '1.8.9'
     agent "org.aspectj:aspectjweaver:${aspectjVersion}"
 }
 
@@ -45,8 +46,9 @@ allure {
 
 test {
     systemProperty "file.encoding", "utf-8"
-    useTestNG() {
-        //        suites "src/test/resources/testng.xml"
-        suiteXmlFiles << new File(rootDir, "testng.xml") //This is how to add custom testng.xml
-    }
+    useTestNG()
+}
+
+allureReport {
+    dependsOn test
 }
